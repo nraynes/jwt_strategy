@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model accounts {
+  account_id Int @default(autoincrement()) @id
+  username String @db.VarChar @unique
+  password_hash String @db.VarChar()
+  dynamic_salt String @db.VarChar()
+  post posts[]
+  token tokens[]
+}
+
+model posts {
+  post_id Int @default(autoincrement()) @id
+  account accounts @relation(fields: [account_id], references: [account_id])
+  account_id Int
+  post String? @db.VarChar()
+}
+
+model tokens {
+  token_id Int @default(autoincrement()) @id
+  account accounts @relation(fields: [account_id], references: [account_id])
+  account_id Int
+  token String @db.VarChar()
+}
