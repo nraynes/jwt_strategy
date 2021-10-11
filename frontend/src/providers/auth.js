@@ -123,7 +123,7 @@ const registerFn = async (registrationInfo) => {
         .then(data => data.json())
         .then(data => data)
     console.log('The user that register is:', userRegistered)
-    return userRegistered;
+    window.checkReg = userRegistered;
 };
 
 const authConfig = {

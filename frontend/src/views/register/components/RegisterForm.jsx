@@ -21,7 +21,9 @@ function RegisterForm(props) {
             alert('Passwords must match.');
         } else {
             console.log('about to wait...')
-            const checkRegister = await auth.register({username: un.current.value, password: pa.current.value})
+            await auth.register({username: un.current.value, password: pa.current.value})
+            const checkRegister = window.checkReg;
+            window.checkReg = null;
             console.log('checkRegister',checkRegister)
             if (checkRegister === 'SUCCESS') {
                 alert('Successfully created user');

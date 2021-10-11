@@ -11,6 +11,7 @@ function PostsPage(props) {
     const navigate = useNavigate();
 
     function getUserPosts(user) {
+        console.log(user.account_id)
         fetch('http://localhost:3001/api/main/posts', {
             method: 'POST',
             headers: {
