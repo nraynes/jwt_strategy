@@ -16,6 +16,21 @@ const postGetter = async (userid) => {
     }
 }
 
+const createPost = async (id, post, res) => {
+    const createdPost = await prisma.posts.create({
+        data: {
+            account_id: id,
+            post: post
+        }
+    })
+    if (createdPost) {
+        res.json('SUCCESS');
+    } else {
+        res.json('FAILURE');
+    }
+}
+
 module.exports = {
-    postGetter
+    postGetter,
+    createPost
 }

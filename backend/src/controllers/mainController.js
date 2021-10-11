@@ -11,6 +11,12 @@ const getPosts = catchAsync(async (req, res) => {
     }
 })
 
+const post = catchAsync(async (req, res) => {
+    const { post, id } = req.body;
+    mainService.createPost( id, post, res);
+})
+
 module.exports = {
-    getPosts
+    getPosts,
+    post
 }
