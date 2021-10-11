@@ -1,59 +1,20 @@
 import React from 'react';
-import { initReactQueryAuth } from 'react-query-auth';
-import { QueryClient } from 'react-query';
-import { QueryClientProvider } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { AuthProvider } from './auth';
+import ContentProvider from './ContentProvider';
 
 const queryClient = new QueryClient();
 
-const loadUser = async () => {
-    const accessToken = 'somestring'
-    return await fetch('http://localhost:3001/api/auth/me', {
-        method: 'GET',
-        headers: {
-            'authorization': `Bearer ${accessToken}`
-        }
-    })
-        .then(data => data.json())
-        .then(user => user)
-};
+export function AppProvider({ children }) {
 
-const loginFn = (username, password) => {
-    return await fetch('http://localhost:3001/api/main/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/JSON',
-        },
-        body: {
-            username: username,
-            password: password
-        }
-    })
-        .then(data => data.json())
-        .then(data => data.user)
-};
-
-
-const logoutFn = () => {
-    
-};
-
-const authConfig = {
-    loadUser,
-    loginFn,
-    logoutFn
-};
-
-export const { AuthProvider, useAuth } = initReactQueryAuth(authConfig);
-
-function AppProvider({ children }) {
     return (
-        <div>
-            <QueryClientProvider client={queryClient}>
-                <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <ContentProvider>
                     {children}
-                </AuthProvider>
-            </QueryClientProvider>
-        </div>
+                </ContentProvider>
+            </AuthProvider>
+        </QueryClientProvider>
     );
 }
 

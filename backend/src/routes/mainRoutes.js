@@ -1,10 +1,9 @@
 const express = require('express');
 const tokenService = require('../services/tokenService');
+const mainController = require('../controllers/mainController');
 
 const router = express.Router();
 
-router.get('/posts', tokenService.authenticateToken, (req,res) => {
-    const { user } = req;
-})
+router.post('/posts', mainController.getPosts)
 
 module.exports = router;

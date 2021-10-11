@@ -10,7 +10,7 @@ function generateTokens(user) {
 }
 
 function generateAccessToken(data) {
-    return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
 }
 
 function generateRefreshToken(data) {
@@ -22,23 +22,50 @@ function authenticateToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.sendStatus(401)
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) res.sendStatus(403)
+        if (err) res.json('FORBIDDEN')
         req.user = user;
         next();
     })
 }
 
 async function deleteToken(token, res) {
-    await prisma.tokens.deleteMany({
+    const firstCheck = await prisma.tokens.findFirst({
         where: {
             token: token
         }
     })
-    console.log('Deleted Token Successfully...');
-    if (res) {
-        res.sendStatus(204);
+    if (firstCheck) {
+        await prisma.tokens.deleteMany({
+            where: {
+                token: token
+            }
+        })
+        const secondCheck = await prisma.tokens.findFirst({
+            where: {
+                token: token
+            }
+        })
+        if (!secondCheck) {
+            console.log('Deleted Token Successfully...', secondCheck);
+            if (res) {
+                res.json('SUCCESS');
+            } else {
+                return 'SUCCESS';
+            }
+        } else {
+            console.log('Could not delete token... ', secondCheck);
+            if (res) {
+                res.json('FAILURE');
+            } else {
+                return 'FAILURE';
+            }
+        }
     } else {
-        return 'SUCCESS';
+        if (res) {
+            res.json('NOTFOUND');
+        } else {
+            return 'NOTFOUND';
+        }
     }
 }
 
