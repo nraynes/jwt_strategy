@@ -4,7 +4,7 @@ const mainController = require('../controllers/mainController');
 
 const router = express.Router();
 
-router.post('/posts', mainController.getPosts)
-router.post('/post', mainController.post)
+router.post('/posts', tokenService.authenticateToken, mainController.getPosts)
+router.post('/post', tokenService.authenticateToken, mainController.post)
 
 module.exports = router;

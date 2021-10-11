@@ -2,6 +2,7 @@ const tokenService = require('./tokenService');
 const { PrismaClient } = require('@prisma/client');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const { access } = require('fs');
 
 const prisma = new PrismaClient()
 
